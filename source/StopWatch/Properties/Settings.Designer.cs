@@ -190,19 +190,37 @@ namespace StopWatch.Properties {
                 this["UpgradeRequired"] = value;
             }
         }
-        
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string StartTransitions {
-            get {
+        public string StartTransitions
+        {
+            get
+            {
                 return ((string)(this["StartTransitions"]));
             }
-            set {
+            set
+            {
                 this["StartTransitions"] = value;
             }
         }
-        
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CompleteTransitions
+        {
+            get
+            {
+                return ((string)(this["CompleteTransitions"]));
+            }
+            set
+            {
+                this["CompleteTransitions"] = value;
+            }
+        }
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]

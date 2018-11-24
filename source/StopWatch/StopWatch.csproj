@@ -163,6 +163,8 @@
     <None Include="Resources\addissue22.png" />
     <Content Include="icons\delete24.png" />
     <None Include="icons\help22.png" />
+    <None Include="Resources\icons8-checkmark-26.png" />
+    <None Include="icons\done26.png" />
     <Content Include="stopwatchicon.ico" />
     <None Include="icons\play26.png" />
     <None Include="icons\pause26.png" />

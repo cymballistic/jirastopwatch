@@ -67,6 +67,7 @@ namespace StopWatch
         public List<PersistedIssue> PersistedIssues { get; private set; }
 
         public string StartTransitions { get; set; }
+        public string CompleteTransitions { get; set; }
 
         public bool LoggingEnabled { get; set; }
 
@@ -136,6 +137,8 @@ namespace StopWatch
 
             this.StartTransitions = Properties.Settings.Default.StartTransitions;
 
+            this.CompleteTransitions = Properties.Settings.Default.CompleteTransitions;
+
             this.LoggingEnabled = Properties.Settings.Default.LoggingEnabled;
 
             CheckForUpdate = Properties.Settings.Default.CheckForUpdate;
@@ -171,6 +174,8 @@ namespace StopWatch
                 Properties.Settings.Default.AllowMultipleTimers = this.AllowMultipleTimers;
 
                 Properties.Settings.Default.StartTransitions = this.StartTransitions;
+
+                Properties.Settings.Default.CompleteTransitions = this.CompleteTransitions;
 
                 Properties.Settings.Default.LoggingEnabled = this.LoggingEnabled;
 

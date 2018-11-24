@@ -81,6 +81,8 @@ namespace StopWatch
 
             tbStartTransitions.Text = this.settings.StartTransitions;
 
+            tbCompleteTransitions.Text = this.settings.CompleteTransitions;
+
             cbLoggingEnabbled.Checked = this.settings.LoggingEnabled;
 
             cbCheckForUpdate.Checked = settings.CheckForUpdate;
@@ -107,6 +109,7 @@ namespace StopWatch
                 this.settings.PostWorklogComment = (WorklogCommentSetting)cbPostWorklogComment.SelectedValue;
 
                 this.settings.StartTransitions = tbStartTransitions.Text;
+                this.settings.CompleteTransitions = tbCompleteTransitions.Text;
 
                 this.settings.LoggingEnabled = cbLoggingEnabbled.Checked;
                 settings.CheckForUpdate = cbCheckForUpdate.Checked;

@@ -72,6 +72,9 @@ namespace StopWatch
             this.tbUsername = new System.Windows.Forms.TextBox();
             this.lblUsername = new System.Windows.Forms.Label();
             this.cbIncludeProjectName = new System.Windows.Forms.CheckBox();
+            this.tbCompleteTransitions = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lblJiraBaseUrl
@@ -107,7 +110,7 @@ namespace StopWatch
             // 
             this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnOk.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnOk.Location = new System.Drawing.Point(263, 464);
+            this.btnOk.Location = new System.Drawing.Point(263, 518);
             this.btnOk.Margin = new System.Windows.Forms.Padding(2);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(56, 22);
@@ -118,7 +121,7 @@ namespace StopWatch
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(324, 464);
+            this.btnCancel.Location = new System.Drawing.Point(324, 518);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(2);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(56, 22);
@@ -136,7 +139,7 @@ namespace StopWatch
             // 
             // btnAbout
             // 
-            this.btnAbout.Location = new System.Drawing.Point(11, 464);
+            this.btnAbout.Location = new System.Drawing.Point(11, 518);
             this.btnAbout.Margin = new System.Windows.Forms.Padding(2);
             this.btnAbout.Name = "btnAbout";
             this.btnAbout.Size = new System.Drawing.Size(56, 22);
@@ -185,7 +188,7 @@ namespace StopWatch
             // splitter3
             // 
             this.splitter3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.splitter3.Location = new System.Drawing.Point(12, 453);
+            this.splitter3.Location = new System.Drawing.Point(11, 511);
             this.splitter3.Name = "splitter3";
             this.splitter3.Size = new System.Drawing.Size(370, 2);
             this.splitter3.TabIndex = 25;
@@ -253,16 +256,16 @@ namespace StopWatch
             // 
             // lblStartTransitions
             // 
-            this.lblStartTransitions.Location = new System.Drawing.Point(9, 386);
+            this.lblStartTransitions.Location = new System.Drawing.Point(9, 378);
             this.lblStartTransitions.Name = "lblStartTransitions";
-            this.lblStartTransitions.Size = new System.Drawing.Size(107, 52);
+            this.lblStartTransitions.Size = new System.Drawing.Size(331, 17);
             this.lblStartTransitions.TabIndex = 23;
-            this.lblStartTransitions.Text = "Possible state changes when pressing play (seperate by newline)";
+            this.lblStartTransitions.Text = "Possible state changes on action (seperate by newline)";
             // 
             // tbStartTransitions
             // 
             this.tbStartTransitions.AcceptsReturn = true;
-            this.tbStartTransitions.Location = new System.Drawing.Point(122, 386);
+            this.tbStartTransitions.Location = new System.Drawing.Point(122, 398);
             this.tbStartTransitions.Multiline = true;
             this.tbStartTransitions.Name = "tbStartTransitions";
             this.tbStartTransitions.Size = new System.Drawing.Size(200, 52);
@@ -349,13 +352,41 @@ namespace StopWatch
             this.cbIncludeProjectName.Text = "Include project name in issue summary";
             this.cbIncludeProjectName.UseVisualStyleBackColor = true;
             // 
+            // tbCompleteTransitions
+            // 
+            this.tbCompleteTransitions.AcceptsReturn = true;
+            this.tbCompleteTransitions.Location = new System.Drawing.Point(122, 456);
+            this.tbCompleteTransitions.Multiline = true;
+            this.tbCompleteTransitions.Name = "tbCompleteTransitions";
+            this.tbCompleteTransitions.Size = new System.Drawing.Size(200, 52);
+            this.tbCompleteTransitions.TabIndex = 30;
+            // 
+            // label2
+            // 
+            this.label2.Location = new System.Drawing.Point(12, 398);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(107, 52);
+            this.label2.TabIndex = 29;
+            this.label2.Text = "On Start";
+            // 
+            // label3
+            // 
+            this.label3.Location = new System.Drawing.Point(12, 456);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(107, 52);
+            this.label3.TabIndex = 31;
+            this.label3.Text = "On Complete";
+            // 
             // SettingsForm
             // 
             this.AcceptButton = this.btnOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(391, 494);
+            this.ClientSize = new System.Drawing.Size(391, 551);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.tbCompleteTransitions);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.cbIncludeProjectName);
             this.Controls.Add(this.tbPassword);
             this.Controls.Add(this.lblPassword);
@@ -427,5 +458,8 @@ namespace StopWatch
         private System.Windows.Forms.TextBox tbUsername;
         private System.Windows.Forms.Label lblUsername;
         private System.Windows.Forms.CheckBox cbIncludeProjectName;
+        private System.Windows.Forms.TextBox tbCompleteTransitions;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
     }
 }

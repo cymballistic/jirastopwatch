@@ -87,6 +87,8 @@ namespace StopWatch
         #region public events
         public event EventHandler TimerStarted;
 
+        public event EventHandler IssueCompleted;
+
         public event EventHandler TimerReset;
         #endregion
 
@@ -147,7 +149,12 @@ namespace StopWatch
 
             btnOpen.Enabled = cbJira.Text.Trim() != "";
             btnReset.Enabled = WatchTimer.Running || WatchTimer.TimeElapsed.Ticks > 0;
-            btnPostAndReset.Enabled = WatchTimer.TimeElapsedNearestMinute.TotalMinutes >= 1;
+
+            if(WatchTimer.TimeElapsedNearestMinute.TotalMinutes >= 1)
+            {
+                btnPostAndReset.Enabled = true;
+                btnCompleteAndReset.Enabled = true;
+            }
 
             if (updateSummary)
                 UpdateSummary();
@@ -273,6 +280,7 @@ namespace StopWatch
             this.btnReset = new System.Windows.Forms.Button();
             this.btnStartStop = new System.Windows.Forms.Button();
             this.btnOpen = new System.Windows.Forms.Button();
+            this.btnCompleteAndReset = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // cbJira
@@ -321,9 +329,10 @@ namespace StopWatch
             // 
             // btnRemoveIssue
             // 
+            this.btnRemoveIssue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnRemoveIssue.Enabled = false;
             this.btnRemoveIssue.Image = global::StopWatch.Properties.Resources.delete24;
-            this.btnRemoveIssue.Location = new System.Drawing.Point(465, 3);
+            this.btnRemoveIssue.Location = new System.Drawing.Point(484, 3);
             this.btnRemoveIssue.Name = "btnRemoveIssue";
             this.btnRemoveIssue.Size = new System.Drawing.Size(32, 32);
             this.btnRemoveIssue.TabIndex = 7;
@@ -346,9 +355,10 @@ namespace StopWatch
             // 
             // btnReset
             // 
+            this.btnReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnReset.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnReset.Image = global::StopWatch.Properties.Resources.reset24;
-            this.btnReset.Location = new System.Drawing.Point(429, 3);
+            this.btnReset.Location = new System.Drawing.Point(448, 3);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(32, 32);
             this.btnReset.TabIndex = 5;
@@ -383,9 +393,22 @@ namespace StopWatch
             this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
             this.btnOpen.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnOpen_MouseUp);
             // 
+            // btnCompleteAndReset
+            // 
+            this.btnCompleteAndReset.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnCompleteAndReset.Image = global::StopWatch.Properties.Resources.done26;
+            this.btnCompleteAndReset.Location = new System.Drawing.Point(402, 3);
+            this.btnCompleteAndReset.Name = "btnCompleteAndReset";
+            this.btnCompleteAndReset.Size = new System.Drawing.Size(32, 32);
+            this.btnCompleteAndReset.TabIndex = 8;
+            this.ttIssue.SetToolTip(this.btnCompleteAndReset, "Submit worklog to Jira and reset timer (CTRL-L)");
+            this.btnCompleteAndReset.UseVisualStyleBackColor = true;
+            this.btnCompleteAndReset.Click += new System.EventHandler(this.btnCompleteAndReset_Click);
+            // 
             // IssueControl
             // 
             this.BackColor = System.Drawing.SystemColors.Window;
+            this.Controls.Add(this.btnCompleteAndReset);
             this.Controls.Add(this.btnRemoveIssue);
             this.Controls.Add(this.btnPostAndReset);
             this.Controls.Add(this.lblSummary);
@@ -395,7 +418,7 @@ namespace StopWatch
             this.Controls.Add(this.btnOpen);
             this.Controls.Add(this.cbJira);
             this.Name = "IssueControl";
-            this.Size = new System.Drawing.Size(517, 58);
+            this.Size = new System.Drawing.Size(536, 58);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.IssueControl_MouseUp);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -574,7 +597,7 @@ namespace StopWatch
             PostAndReset();
         }
 
-        public void PostAndReset()
+        public bool PostAndReset()
         {
             using (var worklogForm = new WorklogForm(WatchTimer.GetInitialStartTime(), WatchTimer.TimeElapsedNearestMinute, Comment, EstimateUpdateMethod, EstimateUpdateValue))
             {
@@ -587,6 +610,8 @@ namespace StopWatch
                     EstimateUpdateValue = worklogForm.EstimateValue;
 
                     PostAndReset(cbJira.Text, worklogForm.InitialStartTime, WatchTimer.TimeElapsedNearestMinute, Comment, EstimateUpdateMethod, EstimateUpdateValue);
+
+                    return true;
                 }
                 else if (formResult == DialogResult.Yes)
                 {
@@ -596,6 +621,8 @@ namespace StopWatch
                     UpdateOutput();
                 }
             }
+
+            return false;
         }
 
         private void tbTime_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -749,7 +776,7 @@ namespace StopWatch
         private int RemainingEstimateSeconds;
         private Button btnRemoveIssue;
         private bool _MarkedForRemoval = false;
-
+        private Button btnCompleteAndReset;
         private ComboTextBoxEvents cbJiraTbEvents;
         #endregion
 
@@ -806,6 +833,21 @@ namespace StopWatch
         {
             SetSelected();
             UpdateOutput(true);
+        }
+
+        private void btnCompleteAndReset_Click(object sender, EventArgs e)
+        {
+            CompleteAndReset();
+        }
+
+        private void CompleteAndReset()
+        {
+            if (!PostAndReset())
+                return;
+
+            this.IssueCompleted?.Invoke(this, new EventArgs());
+
+            Remove();
         }
     }
 }

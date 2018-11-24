@@ -50,9 +50,7 @@ namespace StopWatch
             InitializeComponent();
 
             pMain.HorizontalScroll.Maximum = 0;
-            pMain.AutoScroll = false;
-            pMain.VerticalScroll.Visible = false;
-            pMain.AutoScroll = true;
+            FixVerticalScrollbars();
 
             Text = string.Format("{0} v. {1}", Application.ProductName, Application.ProductVersion);
 
@@ -105,7 +103,7 @@ namespace StopWatch
         void issue_TimerStarted(object sender, EventArgs e)
         {
             IssueControl senderCtrl = (IssueControl)sender;
-            ChangeIssueState(senderCtrl.IssueKey);
+            StartIssue(senderCtrl.IssueKey);
 
             if (settings.AllowMultipleTimers)
                 return;
@@ -279,6 +277,13 @@ namespace StopWatch
             );
         }
 
+        private void FixVerticalScrollbars()
+        {
+            pMain.AutoScroll = false;
+            pMain.VerticalScroll.Visible = false;
+            pMain.AutoScroll = true;
+        }
+
         private void issue_RemoveMeTriggered(object sender, EventArgs e)
         {
             if (this.settings.IssueCount > 1)
@@ -352,6 +357,7 @@ namespace StopWatch
                 var issue = new IssueControl(this.jiraClient, this.settings);
                 issue.RemoveMeTriggered += new EventHandler(this.issue_RemoveMeTriggered);
                 issue.TimerStarted += issue_TimerStarted;
+                issue.IssueCompleted += Issue_IssueCompleted;
                 issue.TimerReset += Issue_TimerReset;
                 issue.Selected += Issue_Selected;
                 issue.TimeEdited += Issue_TimeEdited;
@@ -360,11 +366,11 @@ namespace StopWatch
 
             // To make sure that pMain's scrollbar doesn't screw up, all IssueControls need to have
             // their position reset, before positioning them again
-            foreach (IssueControl issue in this.issueControls)
-            {
-                issue.Left = 0;
-                issue.Top = 0;
-            }
+            //foreach (IssueControl issue in this.issueControls)
+            //{
+            //    issue.Left = 0;
+            //    issue.Top = 0;
+            //}
 
             // Now position all issueControl controls
             int i = 0;
@@ -384,9 +390,11 @@ namespace StopWatch
 
             if (this.Bottom > workingArea.Bottom)
                 this.Top = workingArea.Bottom - this.Height;
-            
+
             pMain.Height = ClientSize.Height - pTop.Height - pBottom.Height;
             pBottom.Top = ClientSize.Height - pBottom.Height;
+
+            FixVerticalScrollbars();
 
             this.TopMost = this.settings.AlwaysOnTop;
 
@@ -398,6 +406,12 @@ namespace StopWatch
             this.ResumeLayout(false);
             this.PerformLayout();
             UpdateIssuesOutput(true);
+        }
+
+        private void Issue_IssueCompleted(object sender, EventArgs e)
+        {
+            IssueControl senderCtrl = (IssueControl)sender;
+            CompleteIssue(senderCtrl.IssueKey);
         }
 
         private void Issue_TimeEdited(object sender, EventArgs e)
@@ -497,16 +511,28 @@ namespace StopWatch
             );
         }
 
+        private void CompleteIssue(string issueKey)
+        {
+            if (string.IsNullOrWhiteSpace(settings.CompleteTransitions))
+                return;
 
-        private void ChangeIssueState(string issueKey)
+            ChangeIssueState(issueKey, settings.CompleteTransitions);
+        }
+
+        private void StartIssue(string issueKey)
         {
             if (string.IsNullOrWhiteSpace(settings.StartTransitions))
                 return;
 
+            ChangeIssueState(issueKey, settings.StartTransitions);
+        }
+
+        private void ChangeIssueState(string issueKey, string possibleTransitions)
+        {
             Task.Factory.StartNew(
                 () =>
                 {
-                    var startTransitions = this.settings.StartTransitions
+                    var transitions = possibleTransitions
                         .Split(new string[] {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries)
                         .Select(l => l.Trim().ToLower()).ToArray();
 
@@ -516,7 +542,7 @@ namespace StopWatch
 
                     foreach (var t in availableTransitions.Transitions)
                     {
-                        if (startTransitions.Any(t.Name.ToLower().Contains))
+                        if (transitions.Any(t.Name.ToLower().Contains))
                         {
                             jiraClient.DoTransition(issueKey, t.Id);
                             return;
