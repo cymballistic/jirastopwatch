@@ -845,9 +845,10 @@ namespace StopWatch
             if (!PostAndReset())
                 return;
 
-            this.IssueCompleted?.Invoke(this, new EventArgs());
+            IssueCompleted?.Invoke(this, new EventArgs());
 
-            Remove();
+            cbJira.SelectedIndex = -1;
+            UpdateOutput(true);
         }
     }
 }
